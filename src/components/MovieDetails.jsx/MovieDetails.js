@@ -5,6 +5,7 @@ import { getMovieDetails } from '../../API/api';
 import Cast from '../Cast.jsx/Cast';
 import Reviews from '../Reviews.jsx/Reviews';
 import {MovieDetailsWrapper, MoviesPoster, MovieInformation, MovieTitle, MovieDescription, ButtonContainer, LinkButton } from './MovieDetails.styled';
+import GoBackButton from '../GoBackbutton.jsx/GoBackButton';
 
 const MovieDetails = () => {
   const { movieId } = useParams();
@@ -35,6 +36,7 @@ const MovieDetails = () => {
   const toggleReviews = () => {
     setShowReviews(!showReviews);
   };
+  
 
   return (
     <MovieDetailsWrapper>
@@ -57,6 +59,7 @@ const MovieDetails = () => {
       {showReviews && <Reviews movieId={movieId} />}
 </ButtonContainer>
       </MovieInformation>
+      <GoBackButton />
     </MovieDetailsWrapper>
   );
   
