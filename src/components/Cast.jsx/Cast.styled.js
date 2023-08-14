@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 export const CastWrapper = styled.div`
- 
+ margin-top: 20px;
 `;
 
 export const CastPHoto = styled.img`

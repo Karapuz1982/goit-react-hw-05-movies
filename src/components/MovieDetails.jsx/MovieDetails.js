@@ -1,6 +1,6 @@
 
 import React, { useEffect, useState } from 'react';
-import { useParams} from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { getMovieDetails } from '../../API/api';
 import Cast from '../Cast.jsx/Cast';
 import Reviews from '../Reviews.jsx/Reviews';
@@ -9,11 +9,11 @@ import GoBackButton from '../GoBackbutton.jsx/GoBackButton';
 
 const MovieDetails = () => {
   const { movieId } = useParams();
+  
   const [movie, setMovie] = useState(null);
-   const [showCast, setShowCast] = useState(false);
+  const [showCast, setShowCast] = useState(false);
   const [showReviews, setShowReviews] = useState(false);
-
-
+  
   useEffect(() => {
     const fetchMovieDetails = async () => {
       try {
@@ -28,13 +28,13 @@ const MovieDetails = () => {
   }, [movieId]);
 
   if (!movie) return <div>Loading...</div>;
-
-   const toggleCast = () => {
+const toggleCast = () => {
     setShowCast(!showCast);
   };
 
   const toggleReviews = () => {
     setShowReviews(!showReviews);
+    setShowCast(false); 
   };
   
 
@@ -52,14 +52,22 @@ const MovieDetails = () => {
       <MovieTitle>{movie.title}</MovieTitle>
       <MovieDescription>{movie.overview}</MovieDescription>
        
-       <ButtonContainer>
-     <LinkButton onClick={toggleCast}> Cast</LinkButton>
-      {showCast && <Cast movieId={movieId} />}
-      <LinkButton onClick={toggleReviews}>Reviews</LinkButton>
-      {showReviews && <Reviews movieId={movieId} />}
+        <ButtonContainer>
+           <LinkButton onClick={toggleCast}>Cast
+           
+          </LinkButton>
+         
+          <LinkButton onClick={toggleReviews}>Reviews
+           
+          </LinkButton>
+     
 </ButtonContainer>
       </MovieInformation>
+     
+
       <GoBackButton />
+      {showCast && <Cast movieId={movieId} />}
+      {showReviews && <Reviews movieId={movieId} />}
     </MovieDetailsWrapper>
   );
   

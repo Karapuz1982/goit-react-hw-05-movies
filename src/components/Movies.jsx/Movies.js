@@ -1,18 +1,29 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation, useNavigate  } from 'react-router-dom';
 
 import { searchMovies } from '../../API/api';
 import MovieItem from '../MovieItem.jsx/MovieItem';
 import {MoviesWrapper, Input, Button, MoviesList} from './Movies.styled';
 
 const Movies = () => {
-  const [searchQuery, setSearchQuery] = useState('');
+
+ const location = useLocation();
+ const navigate = useNavigate();
+
+
+  const searchParams = new URLSearchParams(location.search);
+  const initialQuery = searchParams.get('query') || '';
+
+ const [searchQuery, setSearchQuery] = useState(initialQuery);
   const [searchResults, setSearchResults] = useState([]);
   
   const handleSearch = async () => {
     try {
       const data = await searchMovies(searchQuery);
       setSearchResults(data.results);
+
+       searchParams.set('query', searchQuery);
+     navigate(`?${searchParams.toString()}`);
      
     } catch (error) {
       console.error('Error searching movies:', error);
