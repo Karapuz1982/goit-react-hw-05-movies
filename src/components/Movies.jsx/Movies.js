@@ -49,7 +49,7 @@
 
 
 // export default Movies;
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { searchMovies } from '../../API/api';
 import MovieItem from '../MovieItem.jsx/MovieItem';
@@ -59,40 +59,35 @@ const Movies = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const searchParams = new URLSearchParams(location.search);
-
+  
   const initialQuery = searchParams.get('query') || '';
 
   const [searchQuery, setSearchQuery] = useState(initialQuery);
   const [searchResults, setSearchResults] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const [noResults, setNoResults] = useState(false);
+  const [isLoading, setIsLoading] = useState(false); 
 
-  const handleSearch = async () => {
+  const handleSearch = useCallback(async () => {
     try {
-      setIsLoading(true);
-      setNoResults(false);
-
+      setIsLoading(true); 
+      
       const data = await searchMovies(searchQuery);
+      setSearchResults(data.results);
 
-      if (data.results.length === 0) {
-        setNoResults(true);
-      } else {
-        setSearchResults(data.results);
-        searchParams.set('query', searchQuery);
-        navigate(`?${searchParams.toString()}`);
-      }
+      searchParams.set('query', searchQuery);
+      navigate(`?${searchParams.toString()}`);
+      
     } catch (error) {
       console.error('Error searching movies:', error);
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [searchQuery, navigate, searchParams]);
 
   useEffect(() => {
     if (initialQuery) {
       handleSearch();
     }
-  }, [initialQuery]);
+  }, [initialQuery, handleSearch]);
 
   return (
     <MoviesWrapper>
@@ -102,8 +97,7 @@ const Movies = () => {
         onChange={(e) => setSearchQuery(e.target.value)}
       />
       <Button onClick={handleSearch}>Search</Button>
-      {isLoading && <div>Loading...</div>}
-      {noResults && <div>No results found.</div>}
+      {isLoading && <div>Loading...</div>} 
       <MoviesList>
         {searchResults.map((movie) => (
           <li key={movie.id}>
@@ -118,4 +112,3 @@ const Movies = () => {
 };
 
 export default Movies;
-
